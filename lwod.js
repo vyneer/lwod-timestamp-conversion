@@ -46,3 +46,22 @@ function YtToTwitch(youtubeurl, twitchid, offset) {
     throw new Error("No 't' parameter in the url.");
   }
 }
+
+function YtToTimestamps(youtubeurl, desc, offset) {
+  var queryParams = parseQuery(youtubeurl);
+  if ("t" in queryParams) {
+    var fullSec = Number(queryParams["t"][0]) + offset;
+    var hoursFloat = fullSec/(60*60);
+    var hoursInt = Math.floor(hoursFloat);
+    var minutesFloat = (hoursFloat - hoursInt)*60;
+    var minutesInt = Math.floor(minutesFloat);
+    var secInt = fullSec - (minutesInt*60 + hoursInt*60*60);
+    if (hoursInt != 0) {
+      return `${hoursInt.toString().padStart(2, "0")}:${minutesInt.toString().padStart(2, "0")}:${secInt.toString().padStart(2, "0")} - ${desc}`
+    } else {
+      return `${minutesInt.toString().padStart(2, "0")}:${secInt.toString().padStart(2, "0")} - ${desc}`
+    }
+  } else {
+    throw new Error("No 't' parameter in the url.");
+  }
+}
